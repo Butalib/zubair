@@ -6,10 +6,12 @@
 /out-tsc
 /bazel-out
 
+
 # Node
 /node_modules
 npm-debug.log
 yarn-error.log
+
 
 # IDEs and editors
 .idea/
@@ -19,6 +21,7 @@ yarn-error.log
 *.launch
 .settings/
 *.sublime-workspace
+.agent/
 
 # Visual Studio Code
 .vscode/*

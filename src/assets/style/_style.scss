@@ -1,0 +1,176 @@
+:root {
+    // Brand colors
+    --color-primary: #e9a834;
+    --color-primary-hover: #d49220;
+    --color-primary-light: #fef3d8;
+    --color-primary-dark: #b8841f;
+    --color-primary-soft: #fff9ee;
+    --color-primary-bar: #e9a834;
+    --color-badge: #e9a834;
+
+    // Typography & Neutral colors
+    --color-text: #1a1a1a;
+    --color-text-muted: #6b7280;
+    --color-text-subtle: #777d85;
+    --color-text-inverse: #ffffff;
+    --color-icon: #52525b;
+    --color-icon-muted: #7b8088;
+    --color-placeholder: #b9bdc3;
+
+    // Background & Surface colors
+    --color-bg: #ffffff;
+    --color-bg-muted: #fafafa;
+    --color-bg-subtle: #f9f9f7;
+    --color-bg-cream: #fdfbf6;
+    --color-page-surface: #faf7f2;
+    --color-bg-dark: #000000;
+    --color-banner-bg: #1c1510;
+    --color-sidebar-bg: #ffffff;
+    --color-sidebar-active: #faf5eb;
+    --color-bg-sidebar-active: #faf5eb;
+
+    // Borders & Dividers
+    --color-border: #e8e8e8;
+    --color-border-light: #f0f0f0;
+    --color-divider: #e7e7e7;
+
+    // Status & Feedback
+    --color-error: #dc2626;
+
+    // Gradients & Headers
+    --page-header-gradient: linear-gradient(180deg, #fef3c7 0%, #fffbeb 100%);
+    --page-header-title-color: #1a1a1a;
+    --page-header-subtitle-color: #b8841f;
+
+    // Layout & Dimensions
+    --promo-bar-height: 38px;
+    --header-height: 76px;
+    --feature-bar-height: 54px;
+    --layout-header-total: 114px;
+    --sidebar-width: 340px;
+    --container-max-width: 1360px;
+    --container-padding: clamp(1rem, 3vw, 2.5rem);
+
+    // Hero dimensions
+    --hero-stack-width: 196px;
+    --hero-stack-height: 248px;
+    --hero-tall-width: 200px;
+    --hero-tall-height: 508px;
+    --hero-image-gap: 12px;
+    --hero-visual-width: 408px;
+
+    // Radii
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 15px;
+    --radius-full: 9999px;
+
+    // Typography & Transitions
+    --font-family-base: 'Cairo', system-ui, -apple-system, sans-serif;
+    --transition-fast: 160ms ease;
+    --transition-base: 0.25s ease;
+
+    // Focus ring
+    --focus-ring: 0 0 0 3px rgba(233, 168, 52, 0.25);
+}
+
+// Variable Font
+@font-face {
+    font-family: 'Cairo';
+    src: url('/assets/fonts/Cairo/Cairo-VariableFont_slnt,wght.ttf') format('truetype-variations');
+    font-weight: 200 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    min-height: 100%;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) transparent;
+}
+
+body {
+    min-width: 320px;
+    min-height: 100%;
+    font-family: var(--font-family-base);
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    font-variant-numeric: lining-nums tabular-nums;
+    font-synthesis: none;
+}
+
+img,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+button,
+a {
+    font: inherit;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.u-ltr {
+    direction: ltr;
+    unicode-bidi: isolate;
+}
+
+// Scrollbars
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: var(--radius-full);
+}
