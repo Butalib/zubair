@@ -1,0 +1,185 @@
+<main class="auth-page" dir="rtl">
+  <section class="auth-card" aria-labelledby="register-title">
+    <header class="auth-card__header">
+      <img class="auth-card__logo" src="assets/images/logo.png" alt="زبير أونلاين" />
+      <h1 id="register-title">إنشاء حساب جديد</h1>
+      @if (!isVerificationStep()) {
+      <p>أنشئ حسابك الآن وابدأ بالتسوق</p>
+      } @else {
+      <p class="verification-subtitle">أدخل رمز التحقق المرسل إلى <span class="phone-number u-ltr">{{ displayPhone()
+          }}</span></p>
+      }
+    </header>
+
+    @if (!isVerificationStep()) {
+    <form class="auth-form" [formGroup]="registerForm" (ngSubmit)="submitRegister()" novalidate>
+
+      @if (registerErrorMessage()) {
+      <div class="auth-alert" role="alert" aria-live="assertive">
+        <svg class="auth-alert__icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        <p class="auth-alert__message">{{ registerErrorMessage() }}</p>
+      </div>
+      }
+
+      <!-- الاسم الكامل -->
+      <div class="auth-field">
+        <label for="name">الاسم الكامل</label>
+        <input id="name" type="text" autocomplete="name" placeholder="الاسم الكامل" formControlName="name"
+          [attr.aria-invalid]="hasFieldError('name')" aria-describedby="name-error" />
+        @if (hasFieldError('name', 'required')) {
+        <small id="name-error" class="auth-field__error">الاسم الكامل مطلوب.</small>
+        } @else if (hasFieldError('name', 'minlength')) {
+        <small id="name-error" class="auth-field__error">يجب أن يكون الاسم 3 أحرف على الأقل.</small>
+        }
+      </div>
+
+      <!-- رقم الجوال -->
+      <div class="auth-field">
+        <label for="phone">رقم الجوال</label>
+        <input id="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="07XXXXXXXXX"
+          formControlName="phone" [attr.aria-invalid]="hasFieldError('phone')" aria-describedby="phone-error"
+          class="u-ltr" />
+        @if (hasFieldError('phone', 'required')) {
+        <small id="phone-error" class="auth-field__error">رقم الجوال مطلوب.</small>
+        }
+      </div>
+
+      <!-- كلمة المرور -->
+      <div class="auth-field">
+        <label for="password">كلمة المرور</label>
+        <div class="password-field">
+          <input id="password" [type]="isPasswordVisible() ? 'text' : 'password'" autocomplete="new-password"
+            placeholder="********" formControlName="password" [attr.aria-invalid]="hasFieldError('password')"
+            aria-describedby="password-error" />
+          <button class="password-field__toggle" type="button"
+            [attr.aria-label]="isPasswordVisible() ? 'إخفاء كلمة المرور' : 'إظهار كلمة المرور'"
+            [attr.aria-pressed]="isPasswordVisible()" (click)="togglePasswordVisibility()">
+            @if (isPasswordVisible()) {
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.2A10.8 10.8 0 0 1 12 5c5 0 8.6 4.2 9.7 6.1a1.8 1.8 0 0 1 0 1.8 18 18 0 0 1-3.1 3.8M6.2 6.3A17.8 17.8 0 0 0 2.3 11.1a1.8 1.8 0 0 0 0 1.8C3.4 14.8 7 19 12 19c1.2 0 2.3-.2 3.3-.6" />
+            </svg>
+            } @else {
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M2.3 12S5.8 5 12 5s9.7 7 9.7 7-3.5 7-9.7 7S2.3 12 2.3 12Z" />
+              <circle cx="12" cy="12" r="2.8" />
+            </svg>
+            }
+          </button>
+        </div>
+        @if (hasFieldError('password', 'required')) {
+        <small id="password-error" class="auth-field__error">كلمة المرور مطلوبة.</small>
+        } @else if (hasFieldError('password', 'minlength')) {
+        <small id="password-error" class="auth-field__error">يجب أن تكون كلمة المرور 6 أحرف على الأقل.</small>
+        }
+      </div>
+
+      <!-- تأكيد كلمة المرور -->
+      <div class="auth-field">
+        <label for="confirmPassword">تأكيد كلمة المرور</label>
+        <div class="password-field">
+          <input id="confirmPassword" [type]="isConfirmPasswordVisible() ? 'text' : 'password'"
+            autocomplete="new-password" placeholder="********" formControlName="confirmPassword"
+            [attr.aria-invalid]="hasFieldError('confirmPassword')" aria-describedby="confirm-password-error" />
+          <button class="password-field__toggle" type="button"
+            [attr.aria-label]="isConfirmPasswordVisible() ? 'إخفاء تأكيد كلمة المرور' : 'إظهار تأكيد كلمة المرور'"
+            [attr.aria-pressed]="isConfirmPasswordVisible()" (click)="toggleConfirmPasswordVisibility()">
+            @if (isConfirmPasswordVisible()) {
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M3 3l18 18M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.2A10.8 10.8 0 0 1 12 5c5 0 8.6 4.2 9.7 6.1a1.8 1.8 0 0 1 0 1.8 18 18 0 0 1-3.1 3.8M6.2 6.3A17.8 17.8 0 0 0 2.3 11.1a1.8 1.8 0 0 0 0 1.8C3.4 14.8 7 19 12 19c1.2 0 2.3-.2 3.3-.6" />
+            </svg>
+            } @else {
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M2.3 12S5.8 5 12 5s9.7 7 9.7 7-3.5 7-9.7 7S2.3 12 2.3 12Z" />
+              <circle cx="12" cy="12" r="2.8" />
+            </svg>
+            }
+          </button>
+        </div>
+        @if (hasFieldError('confirmPassword', 'required')) {
+        <small id="confirm-password-error" class="auth-field__error">تأكيد كلمة المرور مطلوب.</small>
+        } @else if (hasFieldError('confirmPassword', 'passwordsMismatch')) {
+        <small id="confirm-password-error" class="auth-field__error">كلمتا المرور غير متطابقتين.</small>
+        }
+      </div>
+
+      <button class="submit-button" type="submit" [disabled]="isLoading()">
+        @if (isLoading()) {
+        <svg class="spinner" viewBox="0 0 50 50" aria-hidden="true">
+          <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+        </svg>
+        } @else {
+        إرسال رمز التحقق
+        }
+      </button>
+    </form>
+    } @else {
+    <!-- Verification Step -->
+    <div class="verification-step">
+      <form class="auth-form" [formGroup]="otpForm" (ngSubmit)="submitOtp()" novalidate>
+
+        @if (otpErrorMessage()) {
+        <div class="auth-alert" role="alert" aria-live="assertive">
+          <svg class="auth-alert__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          <p class="auth-alert__message">{{ otpErrorMessage() }}</p>
+        </div>
+        }
+
+        <div class="auth-field">
+          <label for="otp">رمز التحقق</label>
+          <input id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="0 0 0 0 0 0"
+            formControlName="otp" [attr.aria-invalid]="hasOtpError()" aria-describedby="otp-error" class="otp-input"
+            maxlength="6" />
+          @if (hasOtpError('required')) {
+          <small id="otp-error" class="auth-field__error">رمز التحقق مطلوب.</small>
+          } @else if (hasOtpError('minlength')) {
+          <small id="otp-error" class="auth-field__error">رمز التحقق يجب أن يكون 6 أرقام.</small>
+          }
+        </div>
+
+        <div class="resend-wrapper">
+          <button class="resend-link" type="button" (click)="resendCode()" [disabled]="isLoading()">
+            إعادة إرسال الرمز
+          </button>
+        </div>
+
+        <button class="submit-button" type="submit" [disabled]="isLoading()">
+          @if (isLoading()) {
+          <svg class="spinner" viewBox="0 0 50 50" aria-hidden="true">
+            <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+          </svg>
+          } @else {
+          إنشاء حساب
+          }
+        </button>
+
+        <div class="edit-data-wrapper">
+          <button class="edit-data-link" type="button" (click)="editData()">
+            تعديل البيانات
+          </button>
+        </div>
+      </form>
+    </div>
+    }
+
+    <div class="auth-divider" aria-hidden="true">
+      <span></span>
+      <strong>أو</strong>
+      <span></span>
+    </div>
+
+    <p class="login-prompt">
+      لديك حساب بالفعل؟
+      <a routerLink="/login">تسجيل الدخول</a>
+    </p>
+  </section>
+</main>
