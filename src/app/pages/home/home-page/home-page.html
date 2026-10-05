@@ -1,0 +1,457 @@
+<!-- ══════════════════════════════════════════════════════════════
+     HERO SECTION
+     ══════════════════════════════════════════════════════════════ -->
+<section class="hero" dir="rtl">
+  <div class="hero__stage">
+    <!-- Text Content -->
+    <div class="hero__content">
+      <div class="hero__content-inner">
+        <div class="hero__eyebrow">
+          <span aria-hidden="true" class="hero__eyebrow-line"></span>
+          <span>مجموعة 2026 الحصرية</span>
+        </div>
+
+        <h1 class="hero__title">
+          الجمال الذي
+          <span class="hero__highlight">يُعرَف</span>
+          من الداخل
+        </h1>
+
+        <p class="hero__description">
+          اكتشفي مجموعة مختارة بعناية من أفضل العلامات العالمية للعناية
+          بالبشرة والشعر، بجودة تثقين بها ونتائج تلمسينها من أول استخدام.
+        </p>
+
+        <div class="hero__actions">
+          <a routerLink="/home" class="btn btn--primary">تسوقي الآن</a>
+          <a routerLink="/home" class="btn btn--outline">استكشفي الأقسام</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual Grid -->
+    <div class="hero__visual">
+      <div class="hero__grid">
+        <div class="hero__card" *ngFor="let slide of heroSlides; let i = index">
+          <a [routerLink]="slide.link" class="hero__card-link">
+            <img [src]="slide.image"
+                 [alt]="'هيرو ' + (i + 1)"
+                 loading="eager" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FEATURE BAR (Marquee)
+     ══════════════════════════════════════════════════════════════ -->
+<section class="feature-bar" dir="rtl">
+  <div class="feature-bar__viewport">
+    <div class="feature-bar__track feature-bar__track--active">
+      <ng-container *ngFor="let _ of [1, 2]">
+        <div class="feature-bar__sequence">
+          <ng-container *ngFor="let f of features; let last = last">
+            <span class="feature-bar__item">
+              <span class="feature-bar__icon">{{ f.icon }}</span>
+              {{ f.text }}
+            </span>
+            <span *ngIf="!last" class="feature-bar__plus">✦</span>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     CATEGORIES
+     ══════════════════════════════════════════════════════════════ -->
+<section class="home-section home-section--white" dir="rtl">
+  <div class="home-section__container">
+    <header class="section-heading">
+      <p class="section-heading__eyebrow">تسوقي بالقسم</p>
+      <h2 class="section-heading__title">اكتشفي مجموعاتنا الحصرية</h2>
+      <p class="section-heading__subtitle">منتجات من أرقى ماركات العناية والجمال في العالم</p>
+    </header>
+
+    <!-- Skeleton -->
+    <div *ngIf="loadingCategories" class="category-mosaic">
+      <div *ngFor="let s of [1,2,3,4,5]"
+           class="category-mosaic__card"
+           [class.category-mosaic__card--featured]="s === 1">
+        <div class="shimmer-block" style="width:100%;height:100%"></div>
+      </div>
+    </div>
+
+    <!-- Data -->
+    <div *ngIf="!loadingCategories && categories.length" class="category-mosaic">
+      <a *ngFor="let cat of categories; let i = index"
+         class="category-mosaic__card"
+         [class.category-mosaic__card--featured]="i === 0"
+         [routerLink]="['/shop/category', cat._id]">
+        <img [src]="getCategoryImage(cat)" [alt]="cat.name" loading="lazy" />
+        <span class="category-mosaic__label">{{ cat.name }}</span>
+      </a>
+    </div>
+
+    <!-- Empty -->
+    <p *ngIf="!loadingCategories && !categories.length" class="home-section__empty">
+      لا توجد أقسام متاحة حالياً.
+    </p>
+
+    <div class="section-cta">
+      <a routerLink="/home" class="btn-more">المزيد ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     FEATURED PRODUCTS
+     ══════════════════════════════════════════════════════════════ -->
+<section class="home-section home-section--cream" dir="rtl">
+  <div class="home-section__container">
+    <header class="section-heading">
+      <p class="section-heading__eyebrow">الأكثر مبيعاً</p>
+      <h2 class="section-heading__title">المنتجات المميزة</h2>
+    </header>
+
+    <!-- Skeleton -->
+    <div *ngIf="loadingFeatured" class="product-grid product-grid--5">
+      <div *ngFor="let s of [1,2,3,4,5]" class="product-card product-card--skeleton">
+        <div class="shimmer-block shimmer-block--rounded" style="height:220px"></div>
+        <div style="padding:1rem">
+          <div class="shimmer-block" style="height:14px;width:60%;margin-bottom:.5rem"></div>
+          <div class="shimmer-block" style="height:12px;width:40%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data -->
+    <div *ngIf="!loadingFeatured && featuredProducts.length" class="product-grid product-grid--5">
+      <a *ngFor="let p of featuredProducts"
+         class="product-card"
+         [routerLink]="['/product', p._id]">
+        <div class="product-card__image">
+          <img [src]="getProductImage(p)" [alt]="p.name" loading="lazy" />
+          <span *ngIf="hasDiscount(p)" class="product-card__badge">
+            -{{ getDiscountPercent(p) }}%
+          </span>
+        </div>
+        <div class="product-card__body">
+          <span *ngIf="p.brand" class="product-card__brand">{{ p.brand.name }}</span>
+          <h3 class="product-card__name">{{ p.name }}</h3>
+          <div class="product-card__price">
+            <span *ngIf="hasDiscount(p)" class="product-card__price--old">{{ p.price | number }} د.ع</span>
+            <span class="product-card__price--current">
+              {{ (hasDiscount(p) ? p.priceAfterDiscount : p.price) | number }} د.ع
+            </span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Empty -->
+    <p *ngIf="!loadingFeatured && !featuredProducts.length" class="home-section__empty">
+      لا توجد منتجات مميزة حالياً.
+    </p>
+
+    <div class="section-cta">
+      <a routerLink="/home" class="btn-more">المزيد ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PROMO BANNERS
+     ══════════════════════════════════════════════════════════════ -->
+<section class="home-section home-section--white" dir="rtl">
+  <div class="home-section__container">
+    <div class="promo-banners">
+      <a *ngFor="let b of promoBanners"
+         class="promo-banner"
+         [class.promo-banner--navy]="b.theme === 'navy'"
+         [class.promo-banner--bronze]="b.theme === 'bronze'"
+         [routerLink]="b.link">
+        <p class="promo-banner__eyebrow">{{ b.eyebrow }}</p>
+        <h3 class="promo-banner__title">
+          {{ b.title }}
+          <span class="promo-banner__highlight">{{ b.highlight }}</span>
+        </h3>
+        <p class="promo-banner__desc">{{ b.desc }}</p>
+        <span class="promo-banner__cta">{{ b.cta }}</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SHOP BY PROBLEM (Classifications)
+     ══════════════════════════════════════════════════════════════ -->
+<section class="home-section home-section--white" dir="rtl">
+  <div class="home-section__container">
+    <header class="section-heading">
+      <p class="section-heading__eyebrow">تسوقي حسب المشكلة</p>
+      <h2 class="section-heading__title">اكتشفي مجموعاتنا الحصرية</h2>
+    </header>
+
+    <!-- Skeleton -->
+    <div *ngIf="loadingClassifications" class="problem-grid">
+      <div *ngFor="let s of [1,2,3,4]" class="problem-card problem-card--skeleton">
+        <div class="problem-card__image">
+          <div class="shimmer-block" style="width:100%;height:100%"></div>
+        </div>
+        <span class="problem-card__label">
+          <div class="shimmer-block shimmer-block--pill" style="height:16px;width:60%;margin:auto"></div>
+        </span>
+      </div>
+    </div>
+
+    <!-- Data -->
+    <div *ngIf="!loadingClassifications && classifications.length" class="problem-grid">
+      <a *ngFor="let c of classifications"
+         class="problem-card"
+         [routerLink]="['/shop/classification', c._id]">
+        <div class="problem-card__image">
+          <img [src]="getClassificationImage(c)" [alt]="c.name" loading="lazy" />
+        </div>
+        <span class="problem-card__label">{{ c.name }}</span>
+      </a>
+    </div>
+
+    <!-- Empty -->
+    <p *ngIf="!loadingClassifications && !classifications.length" class="home-section__empty">
+      لا توجد تصنيفات حالياً.
+    </p>
+
+    <div class="section-cta">
+      <a routerLink="/home" class="btn-more">المزيد ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     BRANDS
+     ══════════════════════════════════════════════════════════════ -->
+<section class="home-section home-section--muted" dir="rtl">
+  <div class="home-section__container">
+    <header class="section-heading">
+      <p class="section-heading__eyebrow">ماركاتنا</p>
+      <h2 class="section-heading__title">ماركات نثق بها</h2>
+    </header>
+
+    <!-- Skeleton -->
+    <div *ngIf="loadingBrands" class="brands-strip brands-strip--skeleton">
+      <span *ngFor="let s of [1,2,3,4,5,6]" class="brands-strip__item">
+        <div class="shimmer-block shimmer-block--pill" style="min-width:6rem;min-height:2rem"></div>
+      </span>
+    </div>
+
+    <!-- Data -->
+    <div *ngIf="!loadingBrands && brands.length" class="brands-strip">
+      <a *ngFor="let brand of brands"
+         class="brands-strip__item"
+         [routerLink]="['/brand', brand._id]">
+        {{ brand.name }}
+      </a>
+    </div>
+
+    <!-- Empty -->
+    <p *ngIf="!loadingBrands && !brands.length" class="home-section__empty">
+      لا توجد ماركات متاحة حالياً.
+    </p>
+
+    <div class="section-cta">
+      <a routerLink="/home" class="btn-more">المزيد ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     NEW PRODUCTS
+     ══════════════════════════════════════════════════════════════ -->
+<section class="home-section home-section--white" dir="rtl">
+  <div class="home-section__container">
+    <header class="section-heading">
+      <p class="section-heading__eyebrow">وصلنا هسة</p>
+      <h2 class="section-heading__title">أحدث المنتجات</h2>
+    </header>
+
+    <div *ngIf="loadingNew" class="product-grid product-grid--5">
+      <div *ngFor="let s of [1,2,3,4,5]" class="product-card product-card--skeleton">
+        <div class="shimmer-block shimmer-block--rounded" style="height:220px"></div>
+        <div style="padding:1rem">
+          <div class="shimmer-block" style="height:14px;width:60%;margin-bottom:.5rem"></div>
+          <div class="shimmer-block" style="height:12px;width:40%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!loadingNew && newProducts.length" class="product-grid product-grid--5">
+      <a *ngFor="let p of newProducts"
+         class="product-card"
+         [routerLink]="['/product', p._id]">
+        <div class="product-card__image">
+          <img [src]="getProductImage(p)" [alt]="p.name" loading="lazy" />
+          <span *ngIf="hasDiscount(p)" class="product-card__badge">
+            -{{ getDiscountPercent(p) }}%
+          </span>
+        </div>
+        <div class="product-card__body">
+          <span *ngIf="p.brand" class="product-card__brand">{{ p.brand.name }}</span>
+          <h3 class="product-card__name">{{ p.name }}</h3>
+          <div class="product-card__price">
+            <span *ngIf="hasDiscount(p)" class="product-card__price--old">{{ p.price | number }} د.ع</span>
+            <span class="product-card__price--current">
+              {{ (hasDiscount(p) ? p.priceAfterDiscount : p.price) | number }} د.ع
+            </span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <p *ngIf="!loadingNew && !newProducts.length" class="home-section__empty">
+      لا توجد منتجات جديدة حالياً.
+    </p>
+
+    <div class="section-cta">
+      <a routerLink="/home" class="btn-more">المزيد ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     SELECTED PRODUCTS
+     ══════════════════════════════════════════════════════════════ -->
+<section class="home-section home-section--white" dir="rtl">
+  <div class="home-section__container">
+    <header class="section-heading">
+      <p class="section-heading__eyebrow">خبراتنا اختارولج بعناية</p>
+      <h2 class="section-heading__title">منتجات مختارة بعناية</h2>
+    </header>
+
+    <div *ngIf="loadingSelected" class="product-grid product-grid--5">
+      <div *ngFor="let s of [1,2,3,4,5]" class="product-card product-card--skeleton">
+        <div class="shimmer-block shimmer-block--rounded" style="height:220px"></div>
+        <div style="padding:1rem">
+          <div class="shimmer-block" style="height:14px;width:60%;margin-bottom:.5rem"></div>
+          <div class="shimmer-block" style="height:12px;width:40%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!loadingSelected && selectedProducts.length" class="product-grid product-grid--5">
+      <a *ngFor="let p of selectedProducts"
+         class="product-card"
+         [routerLink]="['/product', p._id]">
+        <div class="product-card__image">
+          <img [src]="getProductImage(p)" [alt]="p.name" loading="lazy" />
+          <span *ngIf="hasDiscount(p)" class="product-card__badge">
+            -{{ getDiscountPercent(p) }}%
+          </span>
+        </div>
+        <div class="product-card__body">
+          <span *ngIf="p.brand" class="product-card__brand">{{ p.brand.name }}</span>
+          <h3 class="product-card__name">{{ p.name }}</h3>
+          <div class="product-card__price">
+            <span *ngIf="hasDiscount(p)" class="product-card__price--old">{{ p.price | number }} د.ع</span>
+            <span class="product-card__price--current">
+              {{ (hasDiscount(p) ? p.priceAfterDiscount : p.price) | number }} د.ع
+            </span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <p *ngIf="!loadingSelected && !selectedProducts.length" class="home-section__empty">
+      لا توجد منتجات مختارة حالياً.
+    </p>
+
+    <div class="section-cta">
+      <a routerLink="/home" class="btn-more">المزيد ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     RESTOCKED PRODUCTS
+     ══════════════════════════════════════════════════════════════ -->
+<section class="home-section home-section--white" dir="rtl">
+  <div class="home-section__container">
+    <header class="section-heading">
+      <p class="section-heading__eyebrow">رجع توفر هسه</p>
+      <h2 class="section-heading__title">منتجات توفرت من جديد</h2>
+    </header>
+
+    <div *ngIf="loadingRestocked" class="product-grid product-grid--5">
+      <div *ngFor="let s of [1,2,3,4,5]" class="product-card product-card--skeleton">
+        <div class="shimmer-block shimmer-block--rounded" style="height:220px"></div>
+        <div style="padding:1rem">
+          <div class="shimmer-block" style="height:14px;width:60%;margin-bottom:.5rem"></div>
+          <div class="shimmer-block" style="height:12px;width:40%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!loadingRestocked && restockedProducts.length" class="product-grid product-grid--5">
+      <a *ngFor="let p of restockedProducts"
+         class="product-card"
+         [routerLink]="['/product', p._id]">
+        <div class="product-card__image">
+          <img [src]="getProductImage(p)" [alt]="p.name" loading="lazy" />
+          <span *ngIf="hasDiscount(p)" class="product-card__badge">
+            -{{ getDiscountPercent(p) }}%
+          </span>
+        </div>
+        <div class="product-card__body">
+          <span *ngIf="p.brand" class="product-card__brand">{{ p.brand.name }}</span>
+          <h3 class="product-card__name">{{ p.name }}</h3>
+          <div class="product-card__price">
+            <span *ngIf="hasDiscount(p)" class="product-card__price--old">{{ p.price | number }} د.ع</span>
+            <span class="product-card__price--current">
+              {{ (hasDiscount(p) ? p.priceAfterDiscount : p.price) | number }} د.ع
+            </span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <p *ngIf="!loadingRestocked && !restockedProducts.length" class="home-section__empty">
+      لا توجد منتجات متوفرة حالياً.
+    </p>
+
+    <div class="section-cta">
+      <a routerLink="/home" class="btn-more">المزيد ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════
+     NEWSLETTER
+     ══════════════════════════════════════════════════════════════ -->
+<section class="newsletter" dir="rtl">
+  <div class="newsletter__inner">
+    <p class="newsletter__eyebrow">النشرة البريدية</p>
+    <h2 class="newsletter__title">كوني أول من يعلم</h2>
+    <p class="newsletter__desc">
+      اشتركي في نشرتنا واحصلي على خصم 15% على أول طلب + أحدث العروض
+    </p>
+    <form class="newsletter__form" (ngSubmit)="submitNewsletter()">
+      <input type="email"
+             class="newsletter__input"
+             placeholder="...بريدك الإلكتروني"
+             [(ngModel)]="newsletterEmail"
+             name="email" />
+      <button type="submit" class="btn btn--primary newsletter__btn">
+        اشتركي الآن
+      </button>
+    </form>
+    <p *ngIf="newsletterMessage"
+       class="newsletter__message"
+       [class.newsletter__message--success]="newsletterStatus === 'success'"
+       [class.newsletter__message--error]="newsletterStatus === 'error'">
+      {{ newsletterMessage }}
+    </p>
+  </div>
+</section>

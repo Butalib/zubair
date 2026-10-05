@@ -1,0 +1,8 @@
+:host {
+  display: block;
+}
+
+.home-layout {
+  width: 100%;
+  min-height: calc(100dvh - var(--header-height, 76px) - var(--promo-bar-height, 38px));
+}

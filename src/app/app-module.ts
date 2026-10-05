@@ -6,7 +6,8 @@ import { provideToastr } from 'ngx-toastr';
 import { authInterceptor } from './core/interceptor/auth.Interceptor';
 
 import { AppRoutingModule } from './app-routing-module';
-import { App } from './app';
+import { LayoutModule }     from './layout/layout.module';
+import { App }              from './app';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { App } from './app';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    LayoutModule        // ← Navbar, Sidebar, MainLayout, HomeLayout
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -31,4 +33,4 @@ import { App } from './app';
   ],
   bootstrap: [App]
 })
-export class AppModule { }
+export class AppModule {}

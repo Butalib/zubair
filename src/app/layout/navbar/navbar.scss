@@ -1,0 +1,248 @@
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar {
+  background: var(--color-bg, #ffffff);
+  border-bottom: 1px solid var(--color-border-light, #f0f0f0);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.04);
+
+  // ── Promo Bar ──────────────────────────────────────────────
+  &__promo-bar {
+    height: var(--promo-bar-height, 38px);
+    background: var(--color-banner-bg, #1c1510);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+  }
+
+  // ── Main Header ────────────────────────────────────────────
+  &__header {
+    height: var(--header-height, 76px);
+    display: flex;
+    align-items: center;
+  }
+
+  &__container {
+    width: 100%;
+    max-width: var(--container-max-width, 1360px);
+    margin: 0 auto;
+    padding: 0 var(--container-padding, 1.5rem);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  // ── Brand / Logo ───────────────────────────────────────────
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    margin-inline-start: auto; // pushes to right in RTL
+  }
+
+  &__logo {
+    img {
+      height: 44px;
+      width: auto;
+    }
+  }
+
+  // ── Hamburger ──────────────────────────────────────────────
+  &__hamburger {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-sm, 8px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: background var(--transition-fast, 0.16s ease);
+
+    &:hover {
+      background: var(--color-bg-muted, #fafafa);
+    }
+
+    .hamburger-line {
+      width: 22px;
+      height: 2px;
+      background: var(--color-text, #1a1a1a);
+      border-radius: 2px;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+
+      &.open:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+
+      &.open:nth-child(2) {
+        opacity: 0;
+      }
+
+      &.open:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+    }
+  }
+
+  // ── Nav Links (Desktop) ────────────────────────────────────
+  &__nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+    justify-content: center;
+
+    @media (max-width: 860px) {
+      display: none;
+    }
+  }
+
+  &__nav-item {
+    position: relative;
+  }
+
+  // ── Nav Link: NO BACKGROUND on hover or active ─────────────
+  &__nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text, #1a1a1a);
+    text-decoration: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s ease;
+
+    // NO background box! Only text color changes
+    &:hover,
+    &.active {
+      color: var(--color-primary, #e9a834);
+      background: transparent;
+    }
+
+    &--btn {
+      font-family: inherit;
+    }
+
+    .dropdown-arrow {
+      transition: transform 0.2s ease;
+      stroke: currentColor;
+
+      &.rotated {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  // ── Dropdown Menu (تسوقي حسب) ──────────────────────────────
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 1rem);
+    left: 50%;
+    translate: -50% 0;
+    min-width: 220px;
+    padding: 0.5rem;
+    background: var(--color-bg, #ffffff);
+    border: 1px solid var(--color-border-light, #f0f0f0);
+    border-radius: 16px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    animation: dropIn 0.18s ease;
+  }
+
+  // ── Dropdown Item: has border-radius! ───────────────────────
+  &__dropdown-item {
+    display: block;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text, #1a1a1a);
+    text-decoration: none;
+    text-align: center;
+    border-radius: 10px;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    &:hover {
+      background: #fdf8ee;
+      color: var(--color-primary, #e9a834);
+    }
+  }
+
+  // ── Actions (Search, Cart, Bell, User) ───────────────────────
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    margin-inline-end: auto; // pushes to left in RTL
+  }
+
+  &__action-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-sm, 8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-icon, #52525b);
+    cursor: pointer;
+    transition: background var(--transition-fast, 0.16s ease), color var(--transition-fast, 0.16s ease);
+
+    &:hover {
+      background: var(--color-bg-muted, #fafafa);
+      color: var(--color-primary, #e9a834);
+    }
+  }
+
+  // ── Overlay ────────────────────────────────────────────────
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 998;
+    animation: fadeIn 0.2s ease;
+  }
+}
+
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    translate: -50% -6px;
+  }
+
+  to {
+    opacity: 1;
+    translate: -50% 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

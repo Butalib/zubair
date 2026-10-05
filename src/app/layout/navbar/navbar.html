@@ -1,0 +1,92 @@
+<header class="navbar" dir="rtl">
+  <!-- Promo Bar -->
+  <div class="navbar__promo-bar">
+    <span>🚚 توصيل سريع لجميع المحافظات</span>
+  </div>
+
+  <!-- Main Header -->
+  <div class="navbar__header">
+    <div class="navbar__container">
+
+      <!-- Right: Hamburger + Logo -->
+      <div class="navbar__brand">
+        <button class="navbar__hamburger" (click)="layoutService.toggleSidebar()"
+          [attr.aria-expanded]="layoutService.isSidebarOpen()" aria-label="فتح القائمة">
+          <span class="hamburger-line" [class.open]="layoutService.isSidebarOpen()"></span>
+          <span class="hamburger-line" [class.open]="layoutService.isSidebarOpen()"></span>
+          <span class="hamburger-line" [class.open]="layoutService.isSidebarOpen()"></span>
+        </button>
+        <a routerLink="/home" class="navbar__logo">
+          <img src="assets/images/logo-header.svg" alt="Zubair" />
+        </a>
+      </div>
+
+      <!-- Center: Nav Links (Desktop) -->
+      <nav class="navbar__nav" aria-label="القائمة الرئيسية">
+        @for (item of navItems; track item.label) {
+        <div class="navbar__nav-item" [class.has-dropdown]="item.children">
+          @if (!item.children) {
+          <a [routerLink]="item.route" class="navbar__nav-link" routerLinkActive="active">
+            {{ item.labelAr }}
+          </a>
+          } @else {
+          <button class="navbar__nav-link navbar__nav-link--btn"
+                  [class.active]="activeDropdown === item.label"
+                  (click)="toggleDropdown(item.label, $event)">
+            {{ item.labelAr }}
+            <svg class="dropdown-arrow" [class.rotated]="activeDropdown === item.label"
+              xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2.5">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </button>
+          @if (activeDropdown === item.label) {
+          <div class="navbar__dropdown">
+            @for (child of item.children; track child.label) {
+            <a [routerLink]="child.route" class="navbar__dropdown-item" (click)="activeDropdown = null">
+              {{ child.labelAr }}
+            </a>
+            }
+          </div>
+          }
+          }
+        </div>
+        }
+      </nav>
+
+      <!-- Left: Actions -->
+      <div class="navbar__actions">
+        <button class="navbar__action-btn" aria-label="بحث">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+        </button>
+        <button class="navbar__action-btn" aria-label="إشعارات">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+        </button>
+        <button class="navbar__action-btn" aria-label="سلة التسوق">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <path d="M16 10a4 4 0 0 1-8 0" />
+          </svg>
+        </button>
+        <button class="navbar__action-btn" aria-label="حساب المستخدم">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</header>
