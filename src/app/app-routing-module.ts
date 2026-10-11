@@ -5,6 +5,11 @@ import { MainLayoutComponent } from './layout/main-layout/main-layout';
 import { HomeLayoutComponent } from './layout/home-layout/home-layout';
 
 const routes: Routes = [
+  {
+    path: '',
+    redirectTo: '/home',
+    pathMatch: 'full'
+  },
   //   Auth Routes (no layout wrapper) 
   {
     path: 'login',

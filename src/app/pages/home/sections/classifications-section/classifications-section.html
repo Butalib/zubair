@@ -1,0 +1,25 @@
+<section class="home-section home-section--white" dir="rtl">
+  <div class="home-section__container">
+
+    <header class="section-heading">
+      <p class="section-heading__eyebrow">تسوقي حسب المشكلة</p>
+      <h2 class="section-heading__title">اكتشفي مجموعاتنا الحصرية</h2>
+    </header>
+
+    <div class="problem-grid">
+      @for (c of classifications; track c._id) {
+        <a class="problem-card" [routerLink]="['/shop/classification', c._id]">
+          <div class="problem-card__image">
+            <img [src]="getClassificationImage(c)" alt="" loading="lazy" (error)="onImgError($event)" />
+          </div>
+          <span class="problem-card__label">{{ c.name }}</span>
+        </a>
+      }
+    </div>
+
+    <div class="section-cta">
+      <a routerLink="/shop-by" class="btn-more" aria-label="عرض جميع التصنيفات والمشاكل">المزيد ←</a>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,22 @@
+<section class="home-section home-section--muted" dir="rtl">
+  <div class="home-section__container">
+
+    <header class="section-heading">
+      <p class="section-heading__eyebrow">ماركاتنا</p>
+      <h2 class="section-heading__title">ماركات نثق بها</h2>
+    </header>
+
+    <div class="brands-strip">
+      @for (brand of brands(); track brand._id) {
+        <a class="brands-strip__item" [routerLink]="['/brand', brand._id]">
+          {{ brand.name }}
+        </a>
+      }
+    </div>
+
+    <div class="section-cta">
+      <a routerLink="/brands" class="btn-more" aria-label="عرض جميع الماركات">المزيد ←</a>
+    </div>
+
+  </div>
+</section>

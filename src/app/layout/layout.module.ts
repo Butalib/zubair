@@ -2,17 +2,19 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { NavbarComponent }     from './navbar/navbar';
-import { SidebarComponent }    from './sidebar/sidebar';
+import { NavbarComponent } from './navbar/navbar';
+import { SidebarComponent } from './sidebar/sidebar';
 import { MainLayoutComponent } from './main-layout/main-layout';
 import { HomeLayoutComponent } from './home-layout/home-layout';
+import { FooterComponent } from './footer/footer';
 
 @NgModule({
   declarations: [
     NavbarComponent,
     SidebarComponent,
     MainLayoutComponent,
-    HomeLayoutComponent
+    HomeLayoutComponent,
+    FooterComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +24,8 @@ import { HomeLayoutComponent } from './home-layout/home-layout';
     NavbarComponent,
     SidebarComponent,
     MainLayoutComponent,
-    HomeLayoutComponent
+    HomeLayoutComponent,
+    FooterComponent
   ]
 })
-export class LayoutModule {}
+export class LayoutModule { }

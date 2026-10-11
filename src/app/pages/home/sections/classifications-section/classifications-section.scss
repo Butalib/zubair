@@ -1,0 +1,75 @@
+:host {
+  display: block;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  PROBLEM CARDS (Component-Specific)
+// ═══════════════════════════════════════════════════════════
+
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @media (min-width: 576px) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.problem-card {
+  display: block;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--color-border-light);
+  background: var(--color-bg);
+  text-decoration: none;
+  color: inherit;
+  transition: transform var(--transition-base);
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &__image {
+    height: 180px;
+    background: #f3f3f3;
+
+    @media (min-width: 768px) {
+      height: 200px;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__label {
+    display: block;
+    padding: 1rem;
+    text-align: center;
+    background: #f5f5f3;
+    font-family: var(--font-family-base);
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--color-text);
+  }
+
+  &--skeleton {
+    pointer-events: none;
+
+    .problem-card__image {
+      display: block;
+      border: 0;
+    }
+
+    .problem-card__label {
+      height: 2.75rem;
+      margin: 0;
+      padding: 0.75rem;
+      background: transparent;
+    }
+  }
+}

@@ -3,12 +3,8 @@ import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ILoginErrorFeedback } from 'src/app/core/interfaces/project-interfaces';
 import { AuthService } from 'src/app/core/services/auth-service/auth.service';
-
-interface ILoginErrorFeedback {
-  title: string;
-  message: string;
-}
 
 @Component({
   selector: 'app-login-page',

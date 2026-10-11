@@ -19,7 +19,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const clonedReq = addToken(req, currentToken);
 
     return next(clonedReq).pipe(
-        catchError((error: HttpErrorResponse) => {
+        catchError((error: any) => {
             if (
                 req.url.includes('login') ||
                 req.url.includes('signup') ||

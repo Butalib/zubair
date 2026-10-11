@@ -1,13 +1,7 @@
 import { Component, OnInit, inject, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavItem } from 'src/app/core/interfaces/project-interfaces';
 import { LayoutService } from '../layout.service';
-
-export interface NavItem {
-  label: string;
-  labelAr: string;
-  route?: string;
-  children?: { label: string; labelAr: string; route: string }[];
-}
 
 @Component({
   selector: 'app-navbar',

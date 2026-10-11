@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+
+// ═══════════════════════════════════════════════════════════
+//  BRANDS STRIP (Component-Specific)
+// ═══════════════════════════════════════════════════════════
+
+.brands-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+
+  &__item {
+    color: #57534e;
+    font-family: var(--font-family-base);
+    font-weight: 500;
+    font-size: clamp(0.9rem, 2vw, 1.125rem);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    transition: color var(--transition-fast);
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+
+  &--skeleton .brands-strip__item {
+    display: inline-block;
+    min-width: 6rem;
+    min-height: 2rem;
+    border-radius: 9999px;
+  }
+}

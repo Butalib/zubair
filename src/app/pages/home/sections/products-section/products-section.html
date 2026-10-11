@@ -1,0 +1,61 @@
+<section class="home-section {{ bgClass }}" dir="rtl">
+  <div class="home-section__container">
+
+    <header class="section-heading">
+      <p class="section-heading__eyebrow">{{ eyebrow }}</p>
+      <h2 class="section-heading__title">{{ title }}</h2>
+    </header>
+
+    <!-- Skeleton -->
+    @if (loading()) {
+      <div class="product-grid product-grid--5">
+        @for (s of [1,2,3,4,5]; track s) {
+          <div class="product-card product-card--skeleton">
+            <div class="shimmer-block shimmer-block--rounded" style="height:220px"></div>
+            <div style="padding:1rem">
+              <div class="shimmer-block" style="height:14px;width:60%;margin-bottom:.5rem"></div>
+              <div class="shimmer-block" style="height:12px;width:40%"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else if (products().length) {
+      <!-- Data -->
+      <div class="product-grid product-grid--5">
+        @for (p of products(); track p._id) {
+          <a class="product-card" [routerLink]="['/product', p._id]">
+            <div class="product-card__image">
+              <img [src]="getProductImage(p)" alt="" loading="lazy" (error)="onImgError($event)" />
+              @if (hasDiscount(p)) {
+                <span class="product-card__badge">
+                  -{{ getDiscountPercent(p) }}%
+                </span>
+              }
+            </div>
+            <div class="product-card__body">
+              @if (p.brand) {
+                <span class="product-card__brand">{{ p.brand.name }}</span>
+              }
+              <h3 class="product-card__name">{{ p.name }}</h3>
+              <div class="product-card__price">
+                @if (hasDiscount(p)) {
+                  <span class="product-card__price--old">{{ p.price | number }} د.ع</span>
+                }
+                <span class="product-card__price--current">
+                  {{ getFinalPrice(p) | number }} د.ع
+                </span>
+              </div>
+            </div>
+          </a>
+        }
+      </div>
+    } @else {
+      <p class="home-section__empty">لا توجد منتجات متاحة حالياً.</p>
+    }
+
+    <div class="section-cta">
+      <a [routerLink]="ctaLink" class="btn-more">{{ ctaLabel }}</a>
+    </div>
+
+  </div>
+</section>
