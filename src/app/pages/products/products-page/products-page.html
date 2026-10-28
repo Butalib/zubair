@@ -8,74 +8,31 @@
 
   <main id="products-stage" class="products-page__body">
     <div class="products-page__container">
-      <div class="toolbar">
-        <div class="search-box">
-          <svg
-            class="search-box__icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-          >
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-          <input
-            type="search"
-            placeholder="شنو محتاجة اليوم؟"
-            [value]="searchTerm"
-            (input)="onSearchInput($event)"
-            aria-label="البحث عن منتج"
-          />
-        </div>
-        <div class="sort-box">
-          <select
-            [value]="selectedSort"
-            (change)="onSortChange($any($event.target).value)"
-            aria-label="ترتيب المنتجات"
-          >
-            @for (option of sortOptions; track option.value) {
-            <option [value]="option.value">{{ option.label }}</option>
-            }
-          </select>
-          <svg
-            class="sort-box__icon"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-          >
-            <path d="m6 9 6 6 6-6"></path>
-          </svg>
-        </div>
-      </div>
-
       <div class="products-layout">
         <aside
           class="filters-sidebar"
           [class.is-expanded]="filtersExpanded"
           aria-label="تصفية النتائج"
         >
-          <div class="filters-sidebar__header" (click)="filtersExpanded = !filtersExpanded">
-            <h2 class="filters-sidebar__title">تصفية النتائج</h2>
+          <button
+            type="button"
+            class="filters-sidebar__header"
+            (click)="filtersExpanded = !filtersExpanded"
+            [attr.aria-expanded]="filtersExpanded"
+          >
+            <span class="filters-sidebar__title">تصفية النتائج</span>
             <svg
               class="filters-sidebar__icon"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               stroke-width="2"
+              stroke-linecap="round"
               aria-hidden="true"
             >
-              <line x1="4" y1="6" x2="20" y2="6"></line>
-              <line x1="4" y1="12" x2="20" y2="12"></line>
-              <line x1="4" y1="18" x2="20" y2="18"></line>
-              <circle cx="8" cy="6" r="2" fill="currentColor"></circle>
-              <circle cx="16" cy="12" r="2" fill="currentColor"></circle>
-              <circle cx="12" cy="18" r="2" fill="currentColor"></circle>
+              <path d="M3 6h18M6 12h12M10 18h4"></path>
             </svg>
-          </div>
+          </button>
 
           <div class="filters-sidebar__content">
             <div class="filters-sidebar__wrapper">
@@ -85,155 +42,211 @@
                 <span class="shimmer-block"></span>
                 }
               </div>
-              } @else { @if (categories().length) {
-              <section class="filter-group">
-                <h3 class="filter-group__title">القسم</h3>
-                @for (category of categories(); track category._id) {
-                <label class="filter-option">
-                  <input
-                    type="checkbox"
-                    [checked]="isCategorySelected(category._id)"
-                    (change)="toggleCategory(category._id)"
-                  />
-                  <span>{{ category.name }}</span>
-                </label>
+              } @else {
+              <div class="filters-sidebar__groups">
+                @if (categories().length) {
+                <section class="filter-group">
+                  <h3 class="filter-group__title">القسم</h3>
+                  @for (category of categories(); track category._id) {
+                  <label class="filter-option">
+                    <input
+                      type="checkbox"
+                      [checked]="isCategorySelected(category._id)"
+                      (change)="toggleCategory(category._id)"
+                    />
+                    <span>{{ category.name }}</span>
+                  </label>
+                  }
+                </section>
+                } @if (brands().length) {
+                <section class="filter-group">
+                  <h3 class="filter-group__title">الماركة</h3>
+                  @for (brand of brands(); track brand._id) {
+                  <label class="filter-option">
+                    <input
+                      type="checkbox"
+                      [checked]="isBrandSelected(brand._id)"
+                      (change)="toggleBrand(brand._id)"
+                    />
+                    <span>{{ brand.name }}</span>
+                  </label>
+                  }
+                </section>
                 }
-              </section>
-              } @if (brands().length) {
-              <section class="filter-group">
-                <h3 class="filter-group__title">الماركة</h3>
-                @for (brand of brands(); track brand._id) {
-                <label class="filter-option">
-                  <input
-                    type="checkbox"
-                    [checked]="isBrandSelected(brand._id)"
-                    (change)="toggleBrand(brand._id)"
-                  />
-                  <span>{{ brand.name }}</span>
-                </label>
-                }
-              </section>
-              }
+              </div>
 
-              <button type="button" class="clear-filters" (click)="clearFilters()">
-                إعادة تعيين
-              </button>
+              <div class="filters-sidebar__actions">
+                <button type="button" class="apply-filters" (click)="applyFilters()">
+                  تطبيق الفلتر
+                </button>
+                <button type="button" class="reset-filters" (click)="clearFilters()">
+                  إعادة تعيين
+                </button>
+              </div>
               }
             </div>
           </div>
         </aside>
 
-        <section class="products-stage" aria-label="قائمة المنتجات">
-          @if (isLoading()) {
-          <div class="products-grid" aria-busy="true" aria-label="جاري تحميل المنتجات">
-            @for (item of [1, 2, 3, 4, 5, 6]; track item) {
-            <article class="product-card product-card--skeleton">
-              <div class="product-card__image shimmer-block"></div>
-              <div class="product-card__body">
-                <span class="shimmer-block shimmer-block--title"></span>
-                <span class="shimmer-block shimmer-block--text"></span>
-                <span class="shimmer-block shimmer-block--price"></span>
-              </div>
-            </article>
-            }
-          </div>
-          } @else if (hasError()) {
-          <div class="products-state" role="alert">
-            <p>تعذر تحميل المنتجات حالياً.</p>
-            <button type="button" class="clear-filters" (click)="retry()">إعادة المحاولة ↻</button>
-          </div>
-          } @else if (products().length) {
-          <div class="products-grid">
-            @for (product of products(); track product._id) {
-            <article class="product-card">
-              <div class="product-card__image">
-                @if (product.isLimited) {
-                <span class="product-card__badge">كمية محدودة</span>
+        <div class="products-main">
+          <div class="toolbar">
+            <div class="search-box">
+              <svg
+                class="search-box__icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+              </svg>
+              <input
+                type="search"
+                placeholder="شنو محتاجة اليوم؟"
+                [value]="searchTerm"
+                (input)="onSearchInput($event)"
+                aria-label="البحث عن منتج"
+              />
+            </div>
+            <div class="sort-box">
+              <select
+                [value]="selectedSort"
+                (change)="onSortChange($any($event.target).value)"
+                aria-label="ترتيب المنتجات"
+              >
+                @for (option of sortOptions; track option.value) {
+                <option [value]="option.value">{{ option.label }}</option>
                 }
-                <button
-                  type="button"
-                  class="wishlist-button"
-                  [class.wishlist-button--active]="product.isWishlisted"
-                  [attr.aria-label]="product.isWishlisted ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'"
-                  (click)="toggleWishlist(product, $event)"
-                >
-                  <span aria-hidden="true">♡</span>
-                </button>
-                <img
-                  [src]="product.imageUrl"
-                  [alt]="product.name"
-                  loading="lazy"
-                  (error)="onImgError($event)"
-                />
-              </div>
-              <div class="product-card__body">
-                @if (product.brand?.name) {
-                <span class="product-card__brand">{{ product.brand?.name }}</span>
-                }
-                <h2 class="product-card__name">{{ product.name }}</h2>
-                @if (product.description) {
-                <p class="product-card__description">{{ product.description }}</p>
-                }
-                <div class="product-card__footer">
-                  <div class="product-card__price">
-                    <strong>{{ product.finalPrice | number }} د.ع</strong>
-                    @if (product.hasDiscount) {
-                    <del>{{ product.price | number }} د.ع</del>
-                    }
-                  </div>
-                  <button
-                    type="button"
-                    class="cart-button"
-                    aria-label="إضافة إلى السلة"
-                    (click)="addToCart($event)"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-            </article>
-            }
+              </select>
+              <svg
+                class="sort-box__icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <path d="m6 9 6 6 6-6"></path>
+              </svg>
+            </div>
           </div>
 
-          @if (totalPages > 1) {
-          <nav class="pagination" aria-label="صفحات المنتجات">
-            <button
-              type="button"
-              (click)="goToPage(currentPage - 1)"
-              [disabled]="currentPage === 1"
-              aria-label="السابق"
-            >
-              ‹
-            </button>
-            @for (page of pageNumbers; track $index) { @if (page === -1) {
-            <span>…</span>
-            } @else {
-            <button
-              type="button"
-              [class.pagination__active]="page === currentPage"
-              (click)="goToPage(page)"
-            >
-              {{ page }}
-            </button>
-            } }
-            <button
-              type="button"
-              (click)="goToPage(currentPage + 1)"
-              [disabled]="currentPage === totalPages"
-              aria-label="التالي"
-            >
-              ›
-            </button>
-          </nav>
-          } } @else {
-          <div class="products-state">
-            <p>لا توجد منتجات مطابقة لخيارات البحث والتصفية.</p>
-            <button type="button" class="clear-filters" (click)="clearFilters()">
-              عرض كل المنتجات
-            </button>
-          </div>
-          }
-        </section>
+          <section class="products-stage" aria-label="قائمة المنتجات">
+            @if (isLoading()) {
+            <div class="products-grid" aria-busy="true" aria-label="جاري تحميل المنتجات">
+              @for (item of [1, 2, 3, 4, 5, 6]; track item) {
+              <article class="product-card product-card--skeleton">
+                <div class="product-card__image shimmer-block"></div>
+                <div class="product-card__body">
+                  <span class="shimmer-block shimmer-block--title"></span>
+                  <span class="shimmer-block shimmer-block--text"></span>
+                  <span class="shimmer-block shimmer-block--price"></span>
+                </div>
+              </article>
+              }
+            </div>
+            } @else if (hasError()) {
+            <div class="products-state" role="alert">
+              <p>تعذر تحميل المنتجات حالياً.</p>
+              <button type="button" class="clear-filters" (click)="retry()">
+                إعادة المحاولة ↻
+              </button>
+            </div>
+            } @else if (products().length) {
+            <div class="products-grid">
+              @for (product of products(); track product._id) {
+              <article class="product-card">
+                <div class="product-card__image">
+                  @if (product.isLimited) {
+                  <span class="product-card__badge">كمية محدودة</span>
+                  }
+                  <button
+                    type="button"
+                    class="wishlist-button"
+                    [class.wishlist-button--active]="product.isWishlisted"
+                    [attr.aria-label]="product.isWishlisted ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'"
+                    (click)="toggleWishlist(product, $event)"
+                  >
+                    <span aria-hidden="true">♡</span>
+                  </button>
+                  <img
+                    [src]="product.imageUrl"
+                    [alt]="product.name"
+                    loading="lazy"
+                    (error)="onImgError($event)"
+                  />
+                </div>
+                <div class="product-card__body">
+                  @if (product.brand?.name) {
+                  <span class="product-card__brand">{{ product.brand?.name }}</span>
+                  }
+                  <h2 class="product-card__name">{{ product.name }}</h2>
+                  @if (product.description) {
+                  <p class="product-card__description">{{ product.description }}</p>
+                  }
+                  <div class="product-card__footer">
+                    <div class="product-card__price">
+                      <strong>{{ product.finalPrice | number }} د.ع</strong>
+                      @if (product.hasDiscount) {
+                      <del>{{ product.price | number }} د.ع</del>
+                      }
+                    </div>
+                    <button
+                      type="button"
+                      class="cart-button"
+                      aria-label="إضافة إلى السلة"
+                      (click)="addToCart($event)"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </article>
+              }
+            </div>
+
+            @if (totalPages > 1) {
+            <nav class="pagination" aria-label="صفحات المنتجات">
+              <button
+                type="button"
+                (click)="goToPage(currentPage - 1)"
+                [disabled]="currentPage === 1"
+                aria-label="السابق"
+              >
+                ‹
+              </button>
+              @for (page of pageNumbers; track $index) { @if (page === -1) {
+              <span>…</span>
+              } @else {
+              <button
+                type="button"
+                [class.pagination__active]="page === currentPage"
+                (click)="goToPage(page)"
+              >
+                {{ page }}
+              </button>
+              } }
+              <button
+                type="button"
+                (click)="goToPage(currentPage + 1)"
+                [disabled]="currentPage === totalPages"
+                aria-label="التالي"
+              >
+                ›
+              </button>
+            </nav>
+            } } @else {
+            <div class="products-state">
+              <p>لا توجد منتجات مطابقة لخيارات البحث والتصفية.</p>
+              <button type="button" class="clear-filters" (click)="clearFilters()">
+                عرض كل المنتجات
+              </button>
+            </div>
+            }
+          </section>
+        </div>
       </div>
     </div>
   </main>

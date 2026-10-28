@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
-import { inject, Injector } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { inject, Injector, PLATFORM_ID } from '@angular/core';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../services/auth-service/auth.service';
 import { TokenService } from '../services/auth-service/token.service';
@@ -7,6 +8,7 @@ import { TokenService } from '../services/auth-service/token.service';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
     const tokenService = inject(TokenService);
     const injector = inject(Injector);
+    const platformId = inject(PLATFORM_ID);
 
     const addToken = (request: any, token: string | null) => {
         if (!token) return request;
@@ -30,7 +32,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
             const authService = injector.get(AuthService);
 
-            if (error.status === 401) {
+            if (error.status === 401 && isPlatformBrowser(platformId)) {
                 return authService.refreshAccessToken().pipe(
                     switchMap(() => {
                         const newReq = addToken(req, tokenService.getAccessToken());

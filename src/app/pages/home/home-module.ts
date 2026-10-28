@@ -8,6 +8,8 @@ import { ProductsSectionComponent } from './sections/products-section/products-s
 import { ClassificationsSectionComponent } from './sections/classifications-section/classifications-section';
 import { BrandsSectionComponent } from './sections/brands-section/brands-section';
 
+import { InViewDirective } from 'src/app/core/directives/in-view/in-view.directive';
+
 const routes: Routes = [
   { path: '', component: HomePageComponent }
 ];
@@ -22,7 +24,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    InViewDirective
   ]
 })
 export class HomeModule {}

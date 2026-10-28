@@ -6,20 +6,48 @@
       <h2 class="section-heading__title">اكتشفي مجموعاتنا الحصرية</h2>
     </header>
 
-    <div class="problem-grid">
-      @for (c of classifications; track c._id) {
-        <a class="problem-card" [routerLink]="['/shop/classification', c._id]">
-          <div class="problem-card__image">
-            <img [src]="getClassificationImage(c)" alt="" loading="lazy" (error)="onImgError($event)" />
+    <!-- Skeleton Loading -->
+    @if (loading()) {
+      <div class="problem-grid" aria-busy="true" aria-label="جاري تحميل التصنيفات">
+        @for (s of [1, 2, 3, 4, 5]; track s) {
+          <div class="problem-card problem-card--skeleton">
+            <div class="problem-card__image">
+              <div class="shimmer-block"></div>
+            </div>
+            <div class="problem-card__label">
+              <div class="shimmer-block shimmer-block--rounded"></div>
+            </div>
           </div>
-          <span class="problem-card__label">{{ c.name }}</span>
-        </a>
-      }
-    </div>
+        }
+      </div>
+    } @else if (hasError()) {
+      <!-- Error State with Retry -->
+      <div class="home-section__state">
+        <p>تعذر تحميل التصنيفات حالياً.</p>
+        <button type="button" class="home-section__retry-btn" (click)="retry()">
+          إعادة المحاولة ↻
+        </button>
+      </div>
+    } @else if (classifications().length > 0) {
+      <!-- Success with Data -->
+      <div class="problem-grid">
+        @for (c of classifications(); track c._id) {
+          <a class="problem-card" [routerLink]="['/shop/classification', c._id]">
+            <div class="problem-card__image">
+              <img [src]="getClassificationImage(c)" [alt]="c.name" loading="lazy" (error)="onImgError($event)" />
+            </div>
+            <span class="problem-card__label">{{ c.name }}</span>
+          </a>
+        }
+      </div>
 
-    <div class="section-cta">
-      <a routerLink="/shop-by" class="btn-more" aria-label="عرض جميع التصنيفات والمشاكل">المزيد ←</a>
-    </div>
+      <div class="section-cta">
+        <a routerLink="/shop-by" class="btn-more" aria-label="عرض جميع التصنيفات والمشاكل">المزيد ←</a>
+      </div>
+    } @else {
+      <!-- Empty State -->
+      <p class="home-section__empty">لا توجد تصنيفات متاحة حالياً.</p>
+    }
 
   </div>
 </section>

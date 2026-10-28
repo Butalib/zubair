@@ -1,0 +1,83 @@
+<div class="brand-products-page" dir="rtl">
+  <header class="page-header">
+    <div class="page-header__inner">
+      @if (isLoading()) {
+        <div class="header-skeleton shimmer-block"></div>
+      } @else {
+        <h1 class="page-header__title">{{ brand()?.name || 'منتجات الماركة' }}</h1>
+        <p class="page-header__subtitle">منتجات أصلية من الماركة</p>
+      }
+    </div>
+  </header>
+
+  <main class="products-container">
+    @if (hasError()) {
+      <div class="products-state" role="alert">
+        <p>تعذر تحميل منتجات الماركة حالياً.</p>
+      </div>
+    } @else {
+      <div class="filters-bar">
+        <div class="search-box">
+          <svg class="search-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            aria-hidden="true">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="search" placeholder="شنو محتاجة اليوم؟" [value]="searchTerm"
+            (input)="onSearchInput($event)" aria-label="البحث في منتجات الماركة" />
+        </div>
+        <div class="sort-box">
+          <select [value]="selectedSort" (change)="onSortChange($any($event.target).value)" aria-label="ترتيب المنتجات">
+            @for (option of sortOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+          <svg class="sort-box__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            aria-hidden="true">
+            <path d="m6 9 6 6 6-6"></path>
+          </svg>
+        </div>
+      </div>
+
+      @if (isLoading()) {
+      <div class="products-grid" aria-busy="true" aria-label="جاري تحميل المنتجات">
+        @for (skeleton of [1, 2, 3, 4, 5, 6]; track skeleton) {
+          <article class="product-card product-card--skeleton">
+            <div class="product-card__image shimmer-block"></div>
+            <div class="product-card__content">
+              <div class="shimmer-block shimmer-block--title"></div>
+              <div class="shimmer-block shimmer-block--price"></div>
+            </div>
+          </article>
+        }
+      </div>
+      } @else if (products().length > 0) {
+      <div class="products-grid">
+        @for (product of products(); track product._id) {
+          <article class="product-card">
+            <div class="product-card__image">
+              @if (product.isLimited && product.quantity !== 0) {
+                <span class="product-card__badge">كمية محدودة</span>
+              }
+              <img [src]="product.imageUrl" [alt]="product.name" loading="lazy" (error)="onImgError($event)" />
+            </div>
+            <div class="product-card__content">
+              <h2 class="product-card__name">{{ product.name }}</h2>
+              <div class="product-card__price">
+                <span>د.ع {{ product.finalPrice | number }}</span>
+                @if (product.hasDiscount) {
+                  <del>{{ product.price | number }}</del>
+                }
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+      } @else {
+      <div class="products-state">
+        <p>لا توجد منتجات متاحة لهذه الماركة حالياً.</p>
+      </div>
+      }
+    }
+  </main>
+</div>

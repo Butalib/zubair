@@ -1,0 +1,234 @@
+:host {
+  display: block;
+}
+
+.brand-products-page {
+  min-height: calc(100dvh - var(--layout-header-total, 114px));
+  background: #faf8f4;
+  padding-bottom: 4rem;
+}
+
+.page-header {
+  padding: 1.5rem var(--container-padding, clamp(1rem, 3vw, 2.5rem));
+  background: var(--page-header-gradient, linear-gradient(180deg, #fef3c7 0%, #fffbeb 100%));
+  border-bottom: 1px solid #faeccb;
+
+  &__inner {
+    max-width: var(--container-max-width, 1360px);
+    margin-inline: auto;
+  }
+
+  &__title {
+    margin: 0 0 0.25rem;
+    color: #1a1a1a;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 800;
+  }
+
+  &__subtitle {
+    margin: 0;
+    color: #b8841f;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+}
+
+.header-skeleton {
+  width: 12rem;
+  height: 5rem;
+  margin-top: 1rem;
+}
+
+.products-container {
+  max-width: 900px;
+  margin-inline: auto;
+  padding: 1.5rem var(--container-padding, clamp(1rem, 3vw, 2.5rem));
+}
+
+.filters-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 680px;
+  margin: 0 auto 1rem;
+}
+
+.search-box {
+  position: relative;
+  flex: 1;
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.7rem 2.5rem 0.7rem 1rem;
+    color: #242424;
+    background: #fff;
+    border: 1px solid #e8e4dc;
+    border-radius: 999px;
+    outline: none;
+    font: inherit;
+    font-size: 0.8rem;
+    text-align: right;
+
+    &:focus {
+      border-color: #c9902f;
+      box-shadow: 0 0 0 3px rgba(201, 144, 47, 0.12);
+    }
+  }
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    right: 0.9rem;
+    width: 1rem;
+    color: #8d8a84;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+}
+
+.sort-box {
+  position: relative;
+  flex: 0 0 106px;
+
+  select {
+    width: 100%;
+    padding: 0.7rem 0.8rem 0.7rem 2rem;
+    color: #242424;
+    background: #fff;
+    border: 1px solid #e8e4dc;
+    border-radius: 999px;
+    appearance: none;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    left: 0.8rem;
+    width: 0.8rem;
+    color: #8d8a84;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.product-card {
+  overflow: hidden;
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 12px rgba(26, 26, 26, 0.06);
+
+  &__image {
+    position: relative;
+    aspect-ratio: 1;
+    background: #fff;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  &__badge {
+    position: absolute;
+    z-index: 1;
+    top: 0.6rem;
+    inset-inline-start: 0.6rem;
+    padding: 0.25rem 0.5rem;
+    color: #9a6b13;
+    background: #fff3cd;
+    border-radius: 0.3rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+  }
+
+  &__content {
+    min-height: 5rem;
+    padding: 0.7rem 0.8rem;
+  }
+
+  &__name {
+    margin: 0 0 0.5rem;
+    color: #242424;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+
+  &__price {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #b8841f;
+    font-size: 0.8rem;
+    font-weight: 700;
+
+    del {
+      color: #9ca3af;
+      font-size: 0.7rem;
+      font-weight: 400;
+    }
+  }
+}
+
+.product-card--skeleton {
+  .product-card__image {
+    min-height: 12rem;
+    background: #f1f0ed;
+  }
+
+  .product-card__content {
+    display: grid;
+    align-content: center;
+    gap: 0.5rem;
+  }
+}
+
+.shimmer-block {
+  min-height: 1rem;
+  border-radius: 0.35rem;
+}
+
+.shimmer-block--title {
+  width: 70%;
+}
+
+.shimmer-block--price {
+  width: 40%;
+}
+
+.products-state {
+  padding: 4rem 1rem;
+  color: #6b7280;
+  text-align: center;
+
+  p {
+    margin: 0 0 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .filters-bar {
+    gap: 0.6rem;
+  }
+
+  .sort-box {
+    flex-basis: 88px;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+}

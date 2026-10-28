@@ -6,17 +6,38 @@
       <h2 class="section-heading__title">ماركات نثق بها</h2>
     </header>
 
-    <div class="brands-strip">
-      @for (brand of brands(); track brand._id) {
-        <a class="brands-strip__item" [routerLink]="['/brand', brand._id]">
-          {{ brand.name }}
-        </a>
-      }
-    </div>
+    <!-- Skeleton Loading -->
+    @if (loading()) {
+      <div class="brands-strip brands-strip--skeleton" aria-busy="true" aria-label="جاري تحميل الماركات">
+        @for (s of [1, 2, 3, 4, 5, 6, 7, 8]; track s) {
+          <span class="brands-strip__item shimmer-block shimmer-block--pill"></span>
+        }
+      </div>
+    } @else if (hasError()) {
+      <!-- Error State with Retry -->
+      <div class="home-section__state">
+        <p>تعذر تحميل الماركات حالياً.</p>
+        <button type="button" class="home-section__retry-btn" (click)="retry()">
+          إعادة المحاولة ↻
+        </button>
+      </div>
+    } @else if (brands().length > 0) {
+      <!-- Success with Data -->
+      <div class="brands-strip">
+        @for (brand of brands(); track brand._id) {
+          <a class="brands-strip__item" [routerLink]="['/brands', brand._id]">
+            {{ brand.name }}
+          </a>
+        }
+      </div>
 
-    <div class="section-cta">
-      <a routerLink="/brands" class="btn-more" aria-label="عرض جميع الماركات">المزيد ←</a>
-    </div>
+      <div class="section-cta">
+        <a routerLink="/brands" class="btn-more" aria-label="عرض جميع الماركات">المزيد ←</a>
+      </div>
+    } @else {
+      <!-- Empty State -->
+      <p class="home-section__empty">لا توجد ماركات متاحة حالياً.</p>
+    }
 
   </div>
 </section>

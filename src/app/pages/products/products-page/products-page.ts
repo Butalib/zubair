@@ -138,13 +138,15 @@ export class ProductsPageComponent implements OnInit, OnDestroy {
 
   toggleCategory(categoryId: string): void {
     this.selectedCategoryIds = this.toggleSelection(this.selectedCategoryIds, categoryId);
-    this.currentPage = 1;
-    this.loadProducts();
   }
 
   toggleBrand(brandId: string): void {
     this.selectedBrandIds = this.toggleSelection(this.selectedBrandIds, brandId);
+  }
+
+  applyFilters(): void {
     this.currentPage = 1;
+    this.filtersExpanded = false;
     this.loadProducts();
   }
 

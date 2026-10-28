@@ -148,8 +148,6 @@
     margin: 0;
     overflow: hidden;
     background: #f3f3f3;
-    // border-radius: 20px;
-    // transform: translateZ(0);
 
     .hero__card-link {
       position: absolute;
@@ -159,7 +157,6 @@
       height: 100%;
       color: inherit;
       text-decoration: none;
-      // border-radius: 20px;
       overflow: hidden;
     }
 
@@ -169,14 +166,7 @@
       display: block;
       width: 100%;
       height: 100%;
-      // object-fit: cover;
-      // border-radius: 20px;
-      // transition: transform 0.4s ease;
     }
-
-    // &:hover img {
-    //   transform: scale(1.03);
-    // }
   }
 }
 
@@ -303,6 +293,12 @@
       object-fit: cover;
     }
 
+    .shimmer-block {
+      width: 100%;
+      height: 100%;
+    }
+
+    &:first-child,
     &--featured {
       grid-column: 1;
       grid-row: 1 / span 2;

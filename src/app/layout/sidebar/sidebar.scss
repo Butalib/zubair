@@ -159,6 +159,7 @@
     transition: transform 0.22s ease, stroke 0.15s ease;
     margin-inline-start: auto;
 
+    .sidebar__row--expanded &,
     &--open {
       transform: rotate(180deg);
       stroke: var(--color-primary, #e9a834);

@@ -1,5 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { Classification } from 'src/app/core/interfaces/project-interfaces';
+import { Component, Input, OnDestroy, OnInit, signal } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ApiResponse, Classification } from 'src/app/core/interfaces/project-interfaces';
 import { DataService } from 'src/app/core/services/data/data.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { DataService } from 'src/app/core/services/data/data.service';
   styleUrl: './classifications-section.scss',
   standalone: false
 })
-export class ClassificationsSectionComponent implements OnInit {
+export class ClassificationsSectionComponent implements OnInit, OnDestroy {
 
   readonly imageBaseUrl = 'https://zoubair.md-iraqsoft.com/images/';
 
@@ -20,32 +21,54 @@ export class ClassificationsSectionComponent implements OnInit {
     'img-1763391903217.jpeg': 'assets/images/offers/img-1763391903217.jpeg'
   };
 
-  // Pre-populated with local assets → shows instantly before HTTP response
-  classifications: Classification[] = [
-    { _id: '691afb814bd60a91502c06cf', name: 'مكملات صحية',         image: 'assets/images/offers/img-1763391903217.jpeg', active: true },
-    { _id: '6909ce046d907a82838b4338', name: 'مكياج واكسسوارات',    image: 'assets/images/offers/img-1762250241948.jpeg', active: true },
-    { _id: '68dcfa2c8ef01edc46f428dc', name: 'تسوقي حسب المادة',    image: 'assets/images/offers/img-1759312425771.jpeg', active: true },
-    { _id: '68dcfa088ef01edc46f428ca', name: 'مشاكل الشعر',          image: 'assets/images/offers/img-1759312381259.jpeg', active: true },
-    { _id: '68dcf9a98ef01edc46f428b1', name: 'مشاكل البشرة والجسم', image: 'assets/images/offers/img-1759312346164.jpeg', active: true }
-  ];
+  private readonly MAX_ITEMS = 5;
 
-  loading = false; // false because we already have local data
+  /** If true, delays data fetching until loadClassifications() is explicitly called */
+  @Input() lazy = false;
+
+  readonly classifications = signal<Classification[]>([]);
+  readonly loading = signal<boolean>(true);
+  readonly hasError = signal<boolean>(false);
+
+  private subscription?: Subscription;
 
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
-    // Sync only backend _id values; keep local images
-    this.dataService.getData('classification').subscribe({
-      next: (res: any) => {
+    if (!this.lazy) {
+      this.loadClassifications();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription?.unsubscribe();
+  }
+
+  loadClassifications(): void {
+    this.subscription?.unsubscribe();
+    this.loading.set(true);
+    this.hasError.set(false);
+
+    this.subscription = this.dataService.getData<ApiResponse<Classification[]>>('classification').subscribe({
+      next: (res) => {
         if (res?.data && Array.isArray(res.data)) {
-          this.classifications = this.classifications.map(local => {
-            const remote = res.data.find((c: any) => c.name?.trim() === local.name?.trim());
-            return remote ? { ...local, _id: remote._id } : local;
-          });
+          const activeItems = res.data.filter(item => item.active !== false);
+          this.classifications.set(activeItems.slice(0, this.MAX_ITEMS));
+        } else {
+          this.classifications.set([]);
         }
+        this.hasError.set(false);
+        this.loading.set(false);
       },
-      error: () => { /* silently keep local data */ }
+      error: () => {
+        this.hasError.set(true);
+        this.loading.set(false);
+      }
     });
+  }
+
+  retry(): void {
+    this.loadClassifications();
   }
 
   getClassificationImage(c: Classification): string {

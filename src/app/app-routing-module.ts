@@ -40,7 +40,25 @@ const routes: Routes = [
         ]
       },
 
-      //   Zones  
+      //   Categories
+      {
+        path: 'categories',
+        loadChildren: () => import('./pages/categories/categories-module').then(m => m.CategoriesModule)
+      },
+      {
+        path: 'products',
+        loadChildren: () => import('./pages/products/products-module').then(m => m.ProductsModule)
+      },
+
+      //   Shop — Classification & SubClass browsing
+      //   /shop/classification/:id  → يعرض الـ SubClasses الخاصة بالـ Classification
+      //   /shop/subclass/:id        → يعرض الـ Products الخاصة بالـ SubClass
+      {
+        path: 'shop',
+        loadChildren: () => import('./pages/shop/shop-module').then(m => m.ShopModule)
+      },
+
+
       //   {
       //     path: 'zones',
       //     loadChildren: () => import('./pages/zones/zones-module').then(m => m.ZonesModule)
@@ -52,11 +70,10 @@ const routes: Routes = [
       //     loadChildren: () => import('./pages/offers/offers-module').then(m => m.OffersModule)
       //   },
 
-      //   //   Brands           
-      //   {
-      //     path: 'brands',
-      //     loadChildren: () => import('./pages/brands/brands-module').then(m => m.BrandsModule)
-      //   },
+      {
+        path: 'brands',
+        loadChildren: () => import('./pages/brands/brands-module').then(m => m.BrandsModule)
+      },
 
       //   //   Routines          
       //   {
@@ -145,7 +162,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { bindToComponentInputs: true })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

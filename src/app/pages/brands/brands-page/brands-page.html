@@ -1,0 +1,49 @@
+<div class="brands-page" dir="rtl">
+  <header class="page-header">
+    <div class="page-header__inner">
+      <h1 class="page-header__title">الماركات</h1>
+      <p class="page-header__subtitle">اكتشفي أفضل الماركات العالمية</p>
+    </div>
+  </header>
+
+  <main class="brands-page__body">
+    <div class="brands-page__container">
+      @if (isLoading()) {
+        <div class="brands-grid brands-grid--skeleton" aria-busy="true" aria-label="جاري تحميل الماركات">
+          @for (skeleton of [1, 2, 3, 4, 5, 6]; track skeleton) {
+            <article class="brand-card">
+              <div class="brand-card__visual shimmer-block"></div>
+              <div class="brand-card__content">
+                <div class="shimmer-block shimmer-block--title"></div>
+                <div class="shimmer-block shimmer-block--count"></div>
+              </div>
+            </article>
+          }
+        </div>
+      } @else if (hasError()) {
+        <div class="brands-state" role="alert">
+          <p>تعذر تحميل الماركات حالياً.</p>
+          <button type="button" class="brands-state__retry" (click)="retry()">إعادة المحاولة ↻</button>
+        </div>
+      } @else if (brands().length > 0) {
+        <div class="brands-grid">
+          @for (brand of brands(); track brand._id) {
+            <a class="brand-card" [routerLink]="['/brands', brand._id]">
+              <div class="brand-card__visual">
+                <img [src]="getBrandImage(brand)" [alt]="brand.name" loading="lazy" (error)="onImgError($event)" />
+              </div>
+              <div class="brand-card__content">
+                <h2 class="brand-card__name">{{ brand.name }}</h2>
+                <span class="brand-card__link">تسوقي الآن ←</span>
+              </div>
+            </a>
+          }
+        </div>
+      } @else {
+        <div class="brands-state">
+          <p>لا توجد ماركات متاحة حالياً.</p>
+        </div>
+      }
+    </div>
+  </main>
+</div>

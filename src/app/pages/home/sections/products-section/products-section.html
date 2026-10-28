@@ -11,10 +11,12 @@
       <div class="product-grid product-grid--5">
         @for (s of [1,2,3,4,5]; track s) {
           <div class="product-card product-card--skeleton">
-            <div class="shimmer-block shimmer-block--rounded" style="height:220px"></div>
-            <div style="padding:1rem">
-              <div class="shimmer-block" style="height:14px;width:60%;margin-bottom:.5rem"></div>
-              <div class="shimmer-block" style="height:12px;width:40%"></div>
+            <div class="product-card__image">
+              <div class="shimmer-block"></div>
+            </div>
+            <div class="product-card__body">
+              <div class="shimmer-block shimmer-block--title"></div>
+              <div class="shimmer-block shimmer-block--price"></div>
             </div>
           </div>
         }
@@ -25,7 +27,7 @@
         @for (p of products(); track p._id) {
           <a class="product-card" [routerLink]="['/product', p._id]">
             <div class="product-card__image">
-              <img [src]="getProductImage(p)" alt="" loading="lazy" (error)="onImgError($event)" />
+              <img [src]="getProductImage(p)" [alt]="p.name" loading="lazy" (error)="onImgError($event)" />
               @if (hasDiscount(p)) {
                 <span class="product-card__badge">
                   -{{ getDiscountPercent(p) }}%

@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { take, timeout } from "rxjs";
+import { Observable, take, timeout } from "rxjs";
 import { environment } from "src/environments/environment";
 
 const baseUrl = environment.baseUrl;
@@ -13,8 +13,8 @@ export class DataService {
     private http: HttpClient
   ) { }
 
-  getData(url: string, timeoutMs: number = DEFAULT_TIMEOUT_MS) {
-    return this.http.get(baseUrl + url).pipe(
+  getData<T = any>(url: string, timeoutMs: number = DEFAULT_TIMEOUT_MS): Observable<T> {
+    return this.http.get<T>(baseUrl + url).pipe(
       timeout(timeoutMs),
       take(1)
     );

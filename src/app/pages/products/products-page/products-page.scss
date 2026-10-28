@@ -124,14 +124,16 @@
 
 .products-layout {
   display: grid;
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 260px minmax(0, 1fr);
   gap: 1.5rem;
   align-items: start;
 }
 
+.products-main {
+  min-width: 0;
+}
+
 .filters-sidebar {
-  position: sticky;
-  top: 1rem;
   background: #fff;
   border: 1px solid #ece8e1;
   border-radius: 0.8rem;
@@ -142,8 +144,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     padding: 1rem;
+    background: transparent;
+    border: 0;
     border-bottom: 1px solid #f0ede7;
+    cursor: default;
+    font: inherit;
+    text-align: inherit;
   }
 
   &__title {
@@ -160,13 +168,58 @@
     flex-shrink: 0;
   }
 
-  &__content {
-    max-height: calc(100vh - 200px);
-    overflow-y: auto;
-  }
-
   &__wrapper {
     min-height: 0;
+  }
+
+  &__groups {
+    max-height: 420px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #e7a629 transparent;
+  }
+
+  &__actions {
+    display: grid;
+    gap: 0.6rem;
+    padding: 1rem;
+    border-top: 1px solid #f0ede7;
+  }
+}
+
+.apply-filters,
+.reset-filters {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.apply-filters {
+  color: #fff;
+  background: #e7a629;
+  border: 1px solid #e7a629;
+
+  &:hover {
+    background: #d4951c;
+    border-color: #d4951c;
+  }
+}
+
+.reset-filters {
+  color: #8d8a84;
+  background: #fff;
+  border: 1px solid #e8e4dc;
+
+  &:hover {
+    color: #b8841f;
+    border-color: #d9b983;
   }
 }
 
@@ -242,7 +295,7 @@
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.15rem;
 }
 
@@ -373,7 +426,7 @@
   position: absolute;
   z-index: 3;
   bottom: 0.55rem;
-  inset-inline-start: 0.55rem;
+  inset-inline-end: 0.55rem;
   display: grid;
   place-items: center;
   width: 1.9rem;
@@ -492,10 +545,6 @@
   }
 
   .filters-sidebar {
-    position: relative;
-    top: 0;
-    order: 2;
-
     &__header {
       cursor: pointer;
       user-select: none;
@@ -518,6 +567,7 @@
       grid-template-rows: 0fr;
       transition: grid-template-rows 0.3s ease;
       max-height: none;
+      overflow: hidden;
     }
 
     &__wrapper {
@@ -534,13 +584,13 @@
       }
     }
   }
-
-  .products-stage {
-    order: 1;
-  }
 }
 
 @media (max-width: 760px) {
+  .products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .toolbar {
     flex-wrap: wrap;
   }

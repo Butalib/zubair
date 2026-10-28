@@ -1,0 +1,84 @@
+﻿<!-- ═══════════════════════════════════════════════════════════════════════════
+     Classification Page — يعرض الـ SubClasses التابعة لـ Classification معينة
+     ═══════════════════════════════════════════════════════════════════════════ -->
+<div class="classification-page" dir="rtl">
+
+  <!-- ── Page Header ─────────────────────────────────────────────────────── -->
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">{{ headerTitle() }}</h1>
+      <!-- Breadcrumb: الـ navigation trail اللي بيوضح للمستخدم هو فين -->
+      <nav class="breadcrumb" aria-label="breadcrumb">
+        <a routerLink="/home">الرئيسية</a>
+        <span class="sep">›</span>
+        <span class="current">{{ headerTitle() }}</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Loading State ────────────────────────────────────────────────────── -->
+  <!-- في الشركات: الـ loading state مهم جداً لـ UX — مش بنخلي الصفحة فاضية -->
+  <div class="loading-container" *ngIf="isLoading()">
+    <div class="skeleton-grid">
+      <!-- Skeleton Cards: بيديوا وهم إن المحتوى بيتحمل بدل ما نحط spinner فقط -->
+      <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6]">
+        <div class="skeleton-img"></div>
+        <div class="skeleton-text"></div>
+        <div class="skeleton-text short"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Error State ──────────────────────────────────────────────────────── -->
+  <div class="error-container" *ngIf="hasError() && !isLoading()">
+    <div class="error-card">
+      <span class="error-icon">⚠️</span>
+      <p>حدث خطأ أثناء تحميل البيانات</p>
+      <button class="btn-retry" (click)="retry()">إعادة المحاولة</button>
+    </div>
+  </div>
+
+  <!-- ── Empty State ──────────────────────────────────────────────────────── -->
+  <div class="empty-container" *ngIf="!isLoading() && !hasError() && subclasses().length === 0">
+    <div class="empty-card">
+      <span class="empty-icon">📭</span>
+      <p>لا توجد تصنيفات فرعية حالياً</p>
+    </div>
+  </div>
+
+  <!-- ── SubClasses Grid ──────────────────────────────────────────────────── -->
+  <!-- هنا بنعرض الـ SubClass Cards -->
+  <!-- كل card قابلة للضغط وبتروح لصفحة المنتجات -->
+  <main class="subclasses-grid" *ngIf="!isLoading() && !hasError() && subclasses().length > 0">
+    <article
+      class="subclass-card"
+      *ngFor="let subclass of subclasses(); trackBy: trackById"
+      (click)="goToSubclass(subclass)"
+      role="button"
+      [attr.aria-label]="'عرض منتجات ' + subclass.name"
+      tabindex="0"
+      (keydown.enter)="goToSubclass(subclass)"
+    >
+      <!-- صورة الـ SubClass -->
+      <div class="card-image-wrapper">
+        <img
+          [src]="getSubclassImage(subclass)"
+          [alt]="subclass.name"
+          (error)="onImgError($event)"
+          loading="lazy"
+        />
+      </div>
+
+      <!-- معلومات الـ SubClass -->
+      <div class="card-info">
+        <h2 class="subclass-name">{{ subclass.name }}</h2>
+        <!-- عدد المنتجات لو موجود من الـ API -->
+        <p class="product-count" *ngIf="subclass.productCount !== undefined">
+          {{ subclass.productCount }} منتج
+        </p>
+        <span class="browse-link">تسوق الآن ←</span>
+      </div>
+    </article>
+  </main>
+
+</div>

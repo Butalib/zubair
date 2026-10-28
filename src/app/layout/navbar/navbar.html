@@ -12,9 +12,9 @@
       <div class="navbar__brand">
         <button class="navbar__hamburger" (click)="layoutService.toggleSidebar()"
           [attr.aria-expanded]="layoutService.isSidebarOpen()" aria-label="فتح القائمة">
-          <span class="hamburger-line" [class.open]="layoutService.isSidebarOpen()"></span>
-          <span class="hamburger-line" [class.open]="layoutService.isSidebarOpen()"></span>
-          <span class="hamburger-line" [class.open]="layoutService.isSidebarOpen()"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
         </button>
         <a routerLink="/home" class="navbar__logo" aria-label="زبير أونلاين - الصفحة الرئيسية">
           <img src="assets/images/logo-header.svg" alt="Zubair" width="130" height="42" />
@@ -32,9 +32,10 @@
           } @else {
           <button class="navbar__nav-link navbar__nav-link--btn"
                   [class.active]="activeDropdown === item.label"
+                  [attr.aria-expanded]="activeDropdown === item.label"
                   (click)="toggleDropdown(item.label, $event)">
             {{ item.labelAr }}
-            <svg class="dropdown-arrow" [class.rotated]="activeDropdown === item.label"
+            <svg class="dropdown-arrow"
               xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2.5">
               <path d="m6 9 6 6 6-6" />

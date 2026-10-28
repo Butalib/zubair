@@ -32,11 +32,11 @@
     <!-- Visual Grid -->
     <div class="hero__visual">
       <div class="hero__grid">
-        @for (slide of heroSlides; track $index; let i = $index) {
+        @for (slide of heroSlides; track slide.image) {
         <div class="hero__card">
-          <a [routerLink]="slide.link" class="hero__card-link" [attr.aria-label]="'عرض مجموعة زبير ' + (i + 1)">
-            <img [src]="slide.image" [alt]="'مجموعة زبير ' + (i + 1)" loading="eager"
-              [attr.fetchpriority]="i === 0 ? 'high' : 'auto'" />
+          <a [routerLink]="slide.link" class="hero__card-link" [attr.aria-label]="slide.title">
+            <img [src]="slide.image" [alt]="slide.title" loading="eager"
+              [attr.fetchpriority]="slide.priority || ($first ? 'high' : 'auto')" />
           </a>
         </div>
         }
@@ -90,32 +90,41 @@
       <p class="section-heading__subtitle">منتجات من أرقى ماركات العناية والجمال في العالم</p>
     </header>
 
-    <!-- Skeleton (only if still loading and no local data yet) -->
-    @if (loadingCategories && !categories.length) {
-    <div class="category-mosaic">
-      @for (s of [1,2,3,4,5]; track s) {
-      <div class="category-mosaic__card" [class.category-mosaic__card--featured]="s === 1">
-        <div class="shimmer-block" style="width:100%;height:100%"></div>
+    <!-- Skeleton Loading -->
+    @if (loadingCategories()) {
+    <div class="category-mosaic" aria-busy="true" aria-label="جاري تحميل الأقسام">
+      @for (skeleton of [1,2,3,4,5]; track skeleton) {
+      <div class="category-mosaic__card">
+        <div class="shimmer-block"></div>
       </div>
       }
     </div>
-    } @else if (categories.length) {
+    } @else if (categoriesError()) {
+    <!-- Error State with Retry -->
+    <div class="home-section__state">
+      <p>تعذر تحميل الأقسام حالياً.</p>
+      <button type="button" class="home-section__retry-btn" (click)="retryCategories()">
+        إعادة المحاولة ↻
+      </button>
+    </div>
+    } @else if (categories().length) {
+    <!-- Success with Data -->
     <div class="category-mosaic">
-      @for (cat of categories; track cat._id; let i = $index) {
-      <a class="category-mosaic__card" [class.category-mosaic__card--featured]="i === 0"
-        [routerLink]="['/shop/category', cat._id]">
-        <img [src]="getCategoryImage(cat)" alt="" loading="lazy" (error)="onImgError($event)" />
-        <span class="category-mosaic__label">{{ cat.name }}</span>
+      @for (category of categories(); track category._id) {
+      <a class="category-mosaic__card" [routerLink]="['/categories']" [queryParams]="{ category: category._id }">
+        <img [src]="getCategoryImage(category)" [alt]="category.name" loading="lazy" (error)="onImgError($event)" />
+        <span class="category-mosaic__label">{{ category.name }}</span>
       </a>
       }
     </div>
-    } @else {
-    <p class="home-section__empty">لا توجد أقسام متاحة حالياً.</p>
-    }
 
     <div class="section-cta">
       <a routerLink="/categories" class="btn-more" aria-label="عرض جميع الأقسام">المزيد ←</a>
     </div>
+    } @else {
+    <!-- Empty State -->
+    <p class="home-section__empty">لا توجد أقسام متاحة حالياً.</p>
+    }
   </div>
 </section>
 
@@ -133,8 +142,7 @@
   <div class="home-section__container">
     <div class="promo-banners">
       @for (b of promoBanners; track b.title) {
-      <a class="promo-banner" [class.promo-banner--navy]="b.theme === 'navy'"
-        [class.promo-banner--bronze]="b.theme === 'bronze'" [routerLink]="b.link">
+      <a class="promo-banner promo-banner--{{ b.theme }}" [routerLink]="b.link">
         <p class="promo-banner__eyebrow">{{ b.eyebrow }}</p>
         <h3 class="promo-banner__title">
           {{ b.title }}
@@ -151,31 +159,34 @@
 <!--  
      CLASSIFICATIONS
 -->
-<app-classifications-section></app-classifications-section>
+<app-classifications-section #classificationsSec appInView (inView)="classificationsSec.loadClassifications()" [lazy]="true"></app-classifications-section>
 
 <!--  
      BRANDS
 -->
-<app-brands-section></app-brands-section>
+<app-brands-section #brandsSec appInView (inView)="brandsSec.loadBrands()" [lazy]="true"></app-brands-section>
 
 <!--  
      NEW PRODUCTS
 -->
-<app-products-section apiUrl="products?sort=-createdAt&limit=5" eyebrow="وصلنا هسة" title="أحدث المنتجات"
+<app-products-section #newProducts appInView (inView)="newProducts.loadData()" [lazy]="true"
+  apiUrl="products?sort=-createdAt&limit=5" eyebrow="وصلنا هسة" title="أحدث المنتجات"
   ctaLink="/products/new" ctaLabel="المزيد ←" bgClass="home-section--white">
 </app-products-section>
 
 <!--  
      SELECTED PRODUCTS
 -->
-<app-products-section apiUrl="products?Choose=true&limit=5" eyebrow="خبراتنا اختارولج بعناية"
+<app-products-section #selectedProducts appInView (inView)="selectedProducts.loadData()" [lazy]="true"
+  apiUrl="products?Choose=true&limit=5" eyebrow="خبراتنا اختارولج بعناية"
   title="منتجات مختارة بعناية" ctaLink="/products/selected" ctaLabel="المزيد ←" bgClass="home-section--white">
 </app-products-section>
 
 <!--  
      RESTOCKED PRODUCTS
 -->
-<app-products-section apiUrl="products?available=true&limit=5" eyebrow="رجع توفر هسه" title="منتجات توفرت من جديد"
+<app-products-section #restockedProducts appInView (inView)="restockedProducts.loadData()" [lazy]="true"
+  apiUrl="products?available=true&limit=5" eyebrow="رجع توفر هسه" title="منتجات توفرت من جديد"
   ctaLink="/products/restocked" ctaLabel="المزيد ←" bgClass="home-section--white">
 </app-products-section>
 
@@ -197,8 +208,7 @@
       </button>
     </form>
     @if (newsletterMessage) {
-    <p class="newsletter__message" [class.newsletter__message--success]="newsletterStatus === 'success'"
-      [class.newsletter__message--error]="newsletterStatus === 'error'">
+    <p class="newsletter__message newsletter__message--{{ newsletterStatus }}" role="status">
       {{ newsletterMessage }}
     </p>
     }

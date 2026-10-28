@@ -23,6 +23,8 @@ export class ProductsSectionComponent implements OnInit {
   @Input() ctaLabel = 'المزيد ←';
   /** Section background class e.g. 'home-section--cream' */
   @Input() bgClass = 'home-section--white';
+  /** If true, delays data fetching until loadData() is explicitly called (e.g. by InViewDirective) */
+  @Input() lazy = false;
 
   readonly products = signal<Product[]>([]);
   readonly loading = signal<boolean>(true);
@@ -32,6 +34,15 @@ export class ProductsSectionComponent implements OnInit {
   constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
+    if (!this.lazy) {
+      this.loadData();
+    }
+  }
+
+  loadData(): void {
+    if (!this.apiUrl) return;
+    this.loading.set(true);
+
     this.dataService.getData(this.apiUrl).subscribe({
       next: (res: any) => {
         const data = res?.data || [];
@@ -50,9 +61,6 @@ export class ProductsSectionComponent implements OnInit {
         }
       }
     });
-
-    // this.getDate()
-
   }
   // getDate() {
   //   this.dataService.getData(this.apiUrl).subscribe({
